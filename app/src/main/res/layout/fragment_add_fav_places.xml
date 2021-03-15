@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFavPlaceActivity">
+    android:id="@+id/addPlacesFragmentLayout"
+    tools:context=".AddFavPlacesFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_add_place"
@@ -83,15 +85,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/til_description">
 
-<!--                <androidx.appcompat.widget.AppCompatEditText-->
-<!--                    android:id="@+id/et_date"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:hint="@string/edit_text_hint_date"-->
-<!--                    android:inputType="text"-->
-<!--                    android:textColor="@color/primary_text_color"-->
-<!--                    android:textColorHint="@color/secondary_text_color"-->
-<!--                    android:textSize="@dimen/edit_text_text_size" />-->
+                <!--                <androidx.appcompat.widget.AppCompatEditText-->
+                <!--                    android:id="@+id/et_date"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:hint="@string/edit_text_hint_date"-->
+                <!--                    android:inputType="text"-->
+                <!--                    android:textColor="@color/primary_text_color"-->
+                <!--                    android:textColorHint="@color/secondary_text_color"-->
+                <!--                    android:textSize="@dimen/edit_text_text_size" />-->
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
