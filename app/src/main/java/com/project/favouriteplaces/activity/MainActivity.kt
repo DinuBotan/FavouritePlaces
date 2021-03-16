@@ -1,17 +1,10 @@
-package com.project.favouriteplaces
+package com.project.favouriteplaces.activity
 
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_main2.*
+import com.project.favouriteplaces.fragments.AddFavPlacesFragment
+import com.project.favouriteplaces.fragments.MainFragment
+import com.project.favouriteplaces.R
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +13,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val addPlacesFragment = AddFavPlacesFragment()
+        val addPlacesFragment =
+            AddFavPlacesFragment()
         val mainFragment = MainFragment()
 
 //        Set the initial fragment to our fragments container.
@@ -39,7 +33,8 @@ class MainActivity : AppCompatActivity() {
             if (MainFragment.TAG == tag) {
                 fragment = MainFragment()
             } else if (AddFavPlacesFragment.TAG == tag) {
-                fragment = AddFavPlacesFragment()
+                fragment =
+                    AddFavPlacesFragment()
             }
         }
 

@@ -1,4 +1,4 @@
-package com.project.favouriteplaces
+package com.project.favouriteplaces.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.project.favouriteplaces.R
+import com.project.favouriteplaces.activity.MainActivity
 import kotlinx.android.synthetic.main.fragment_main2.*
 import kotlinx.android.synthetic.main.fragment_main2.view.*
 
@@ -44,9 +46,13 @@ class MainFragment : Fragment() {
                 == PackageManager.PERMISSION_GRANTED)
             {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+                startActivityForResult(intent,
+                    CAMERA_REQUEST_CODE
+                )
             }else{
-                ActivityCompat.requestPermissions(activity as MainActivity, arrayOf(android.Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+                ActivityCompat.requestPermissions(activity as MainActivity, arrayOf(android.Manifest.permission.CAMERA),
+                    CAMERA_PERMISSION_CODE
+                )
             }
         }
 
@@ -61,7 +67,9 @@ class MainFragment : Fragment() {
         if(requestCode == CAMERA_PERMISSION_CODE){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+                startActivityForResult(intent,
+                    CAMERA_REQUEST_CODE
+                )
             }else{
                 Toast.makeText(activity, "Permission was denied", Toast.LENGTH_LONG).show()
             }
