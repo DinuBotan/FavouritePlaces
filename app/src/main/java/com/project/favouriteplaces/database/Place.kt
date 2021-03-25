@@ -9,5 +9,8 @@ data class Place(
     @PrimaryKey(autoGenerate = true) var placeId: Long?,
     @ColumnInfo(name = "placetitle") var placeTitle: String,
     @ColumnInfo(name = "placedescription") var placeDescription: String,
-    @ColumnInfo(name = "placelocation") var placeLocation: String
+    @ColumnInfo(name = "placelocation") var placeLocation: String,
+    @ColumnInfo(name = "placeimage") var placeImage: String,
+    @ColumnInfo(name = "placelatitude") var placeLatitude: Double,
+    @ColumnInfo(name = "placelongitude") var placeLongitude: Double
 )

@@ -2,17 +2,19 @@ package com.project.favouriteplaces.fragments
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.PermissionRequest
 import android.widget.Toast
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -24,16 +26,24 @@ import com.project.favouriteplaces.database.AppDatabase
 import com.project.favouriteplaces.database.Place
 import kotlinx.android.synthetic.main.fragment_add_fav_places.*
 import kotlinx.android.synthetic.main.fragment_add_fav_places.view.*
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.Appendable
-import java.util.jar.Manifest
+import java.io.OutputStream
+import java.util.*
 
 class AddFavPlacesFragment : Fragment(), View.OnClickListener {
+
+    private var saveImageToInternalStorage : Uri? = null
+    private var pLatitude : Double = 0.0
+    private var pLongitude : Double = 0.0
 
     companion object{
         const val TAG = "TAG_FRAGMENT_ADD_PLACES"
         private const val GALLERY = 1
         private const val CAMERA = 2
+        //Place where we will store the images.
+        private const val IMAGE_DIRECTORY = "FavPlacesImages"
     }
 
     override fun onCreateView(
@@ -49,12 +59,13 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
             (activity as MainActivity).onBackPressed()
         }
 
-        rootView.btn_save.setOnClickListener{
-            var newPlace = Place(null, et_title.text.toString(), til_description.toString(), et_location.toString())
-            savePlace(newPlace)
-        }
+//        rootView.btn_save.setOnClickListener{
+//            var newPlace = Place(null, et_title.text.toString(), til_description.toString(), et_location.toString(), "0", 0.0 ,0.0)
+//            savePlace(newPlace)
+//        }
 
         rootView.tv_add_image.setOnClickListener(this)
+        rootView.btn_save.setOnClickListener(this)
 
 
         return rootView;
@@ -85,6 +96,42 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
                 }
                 pictureDialog.show()
             }
+            R.id.btn_save -> {
+                when {
+                    et_title.text.isNullOrEmpty() -> {
+                        Toast.makeText(
+                            activity as MainActivity,
+                            "Please enter a title",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    et_description.text.isNullOrEmpty() -> {
+                        Toast.makeText(
+                            activity as MainActivity,
+                            "Please enter a description",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    et_location.text.isNullOrEmpty() -> {
+                        Toast.makeText(
+                            activity as MainActivity,
+                            "Please enter a location",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    saveImageToInternalStorage == null -> {
+                        Toast.makeText(
+                            activity as MainActivity,
+                            "Please select an image",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else ->{
+                    var newPlace = Place(null, et_title.text.toString(), et_description.text.toString(), et_location.text.toString(),
+                        saveImageToInternalStorage.toString(), pLatitude ,pLongitude)
+                    savePlace(newPlace)
+                }
+                }
+            }
         }
     }
 
@@ -97,6 +144,13 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
                     val contentURI = data.data
                     try{
                         val selectedImageBitmap = MediaStore.Images.Media.getBitmap((activity as MainActivity).contentResolver, contentURI)
+
+                        saveImageToInternalStorage = saveImageToInternalStorage(selectedImageBitmap)
+
+                        Log.e("Saved image: ", "Path :: $saveImageToInternalStorage")
+
+                        //saving the image in the internal storage
+                        saveImageToInternalStorage(selectedImageBitmap)
                         iv_place_image.setImageBitmap(selectedImageBitmap)
                     }catch(e: IOException){
                         e.printStackTrace()
@@ -106,6 +160,11 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
             } else if(requestCode == CAMERA){
                 //we take the data (image) and convert it into a bitmap.
                 val thumbnail : Bitmap = data!!.extras!!.get("data") as Bitmap
+
+                saveImageToInternalStorage = saveImageToInternalStorage(thumbnail)
+
+                Log.e("Saved image: ", "Path :: $saveImageToInternalStorage")
+
                 iv_place_image.setImageBitmap(thumbnail)
             }
         }
@@ -169,6 +228,27 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
             }.setNegativeButton("Cancel"){dialog, _ ->
                 dialog.dismiss()
             }.show()
+    }
+
+    //Will return the Uri, the location of the image.
+    private fun saveImageToInternalStorage(bitmap: Bitmap):Uri{
+        val wrapper = ContextWrapper((activity as MainActivity).applicationContext)
+            //Mode private - makes directory only accessible to this app.
+        var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
+        // gives a unique name to each image.
+        file = File(file, "${UUID.randomUUID()}.jpg")
+
+        try{
+            val stream : OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+        return Uri.parse(file.absolutePath)
+
+
     }
 
 
