@@ -16,6 +16,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -23,13 +27,14 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.activity.MainActivity
 import com.project.favouriteplaces.database.AppDatabase
-import com.project.favouriteplaces.database.Place
+import com.project.favouriteplaces.database.FavPlace
 import kotlinx.android.synthetic.main.fragment_add_fav_places.*
 import kotlinx.android.synthetic.main.fragment_add_fav_places.view.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.lang.Exception
 import java.util.*
 
 class AddFavPlacesFragment : Fragment(), View.OnClickListener {
@@ -44,6 +49,7 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
         private const val CAMERA = 2
         //Place where we will store the images.
         private const val IMAGE_DIRECTORY = "FavPlacesImages"
+        private const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 3
     }
 
     override fun onCreateView(
@@ -59,6 +65,10 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
             (activity as MainActivity).onBackPressed()
         }
 
+        if(!Places.isInitialized()){
+            Places.initialize(activity as MainActivity, resources.getString(R.string.google_maps_api_key))
+        }
+
 //        rootView.btn_save.setOnClickListener{
 //            var newPlace = Place(null, et_title.text.toString(), til_description.toString(), et_location.toString(), "0", 0.0 ,0.0)
 //            savePlace(newPlace)
@@ -66,14 +76,15 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
 
         rootView.tv_add_image.setOnClickListener(this)
         rootView.btn_save.setOnClickListener(this)
+        rootView.et_location.setOnClickListener(this)
 
 
         return rootView;
     }
 
-    private fun savePlace(place: Place){
+    private fun savePlace(favPlace: FavPlace){
         Thread{
-            AppDatabase.getInstance(activity as MainActivity).placeDao().insertPlace(place)
+            AppDatabase.getInstance(activity as MainActivity).placeDao().insertPlace(favPlace)
         }.start()
     }
 
@@ -126,10 +137,23 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else ->{
-                    var newPlace = Place(null, et_title.text.toString(), et_description.text.toString(), et_location.text.toString(),
+                    var newPlace = FavPlace(null, et_title.text.toString(), et_description.text.toString(), et_location.text.toString(),
                         saveImageToInternalStorage.toString(), pLatitude ,pLongitude)
                     savePlace(newPlace)
                 }
+                }
+            }
+            R.id.et_location ->{
+                try{
+                    //The fields we need to pass
+                    val fields = listOf(
+                            Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS
+                    )
+
+                    val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).build(activity as MainActivity)
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
+                }catch(e:Exception){
+                    e.printStackTrace()
                 }
             }
         }
@@ -166,6 +190,11 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
                 Log.e("Saved image: ", "Path :: $saveImageToInternalStorage")
 
                 iv_place_image.setImageBitmap(thumbnail)
+            }else if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
+                val place: Place = Autocomplete.getPlaceFromIntent(data!!)
+                et_location.setText(place.address)
+                pLatitude = place.latLng!!.latitude
+                pLongitude = place.latLng!!.longitude
             }
         }
     }
@@ -247,8 +276,6 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
             e.printStackTrace()
         }
         return Uri.parse(file.absolutePath)
-
-
     }
 
 

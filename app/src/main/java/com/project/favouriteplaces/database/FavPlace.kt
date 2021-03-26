@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "place")
-data class Place(
+data class FavPlace(
     @PrimaryKey(autoGenerate = true) var placeId: Long?,
     @ColumnInfo(name = "placetitle") var placeTitle: String,
     @ColumnInfo(name = "placedescription") var placeDescription: String,

@@ -8,16 +8,16 @@ import androidx.room.Query
 @Dao
 interface PlaceDao {
     @Query("SELECT * FROM place")
-    fun getPlaces(): List<Place>
+    fun getPlaces(): List<FavPlace>
 
     @Query("SELECT * FROM place WHERE placetitle = :title")
-    fun getPlaceByTitle(title: String): List<Place>
+    fun getPlaceByTitle(title: String): List<FavPlace>
 
     @Insert
-    fun insertPlace(vararg places: Place)
+    fun insertPlace(vararg favPlaces: FavPlace)
 
     @Delete
-    fun deletePlace(place: Place)
+    fun deletePlace(favPlace: FavPlace)
 
     @Query("DELETE FROM place")
     fun deleteAllPlaces()
