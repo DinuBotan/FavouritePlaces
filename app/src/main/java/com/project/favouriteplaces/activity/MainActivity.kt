@@ -2,9 +2,15 @@ package com.project.favouriteplaces.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.favouriteplaces.fragments.AddFavPlacesFragment
 import com.project.favouriteplaces.fragments.MainFragment
 import com.project.favouriteplaces.R
+import com.project.favouriteplaces.adapters.FavPlacesAdapter
+import com.project.favouriteplaces.database.AppDatabase
+import com.project.favouriteplaces.database.FavPlace
+import kotlinx.android.synthetic.main.fragment_main2.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +29,24 @@ class MainActivity : AppCompatActivity() {
             addToBackStack(null)
             commit()
         }
+
+        Thread{
+
+            var getFavPlaceList : ArrayList<FavPlace> = AppDatabase.getInstance(this).placeDao().getPlaces().toCollection(ArrayList())
+
+
+            runOnUiThread {
+                if (getFavPlaceList.size > 0) {
+                    setupFavPlacesRecyclerView(getFavPlaceList)
+
+                    rv_fav_places_list.visibility = View.VISIBLE
+                    tv_no_records_available.visibility = View.GONE
+                } else {
+                    rv_fav_places_list.visibility = View.GONE
+                    tv_no_records_available.visibility = View.VISIBLE
+                }
+            }
+        }.start()
 
 
     }
@@ -46,6 +70,14 @@ class MainActivity : AppCompatActivity() {
 
             ft.commit()
         }
+    }
+
+    private fun setupFavPlacesRecyclerView(favPlaceList: ArrayList<FavPlace>){
+        rv_fav_places_list.layoutManager = LinearLayoutManager(this)
+        rv_fav_places_list.setHasFixedSize(true)
+
+        val placesAdapter = FavPlacesAdapter(this, favPlaceList)
+        rv_fav_places_list.adapter = placesAdapter
     }
 
 }

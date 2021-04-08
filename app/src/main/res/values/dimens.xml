@@ -16,5 +16,14 @@
     <dimen name="image_border_stroke_size">0.5dp</dimen>
     <dimen name="add_place_image_shape_radius">3dp</dimen>
     <dimen name="button_radius">10dp</dimen>
+    <dimen name="no_records_available_text_size">16sp</dimen>
+
+    <dimen name="item_fav_place_cv_main_marginStartEnd">8dp</dimen>
+    <dimen name="item_fav_place_content_padding">5dp</dimen>
+    <dimen name="item_fav_place_image_size">70dp</dimen>
+    <dimen name="item_fav_place_marginStart">10dp</dimen>
+    <dimen name="item_fav_place_marginEnd">2dp</dimen>
+    <dimen name="item_fav_place_title_textSize">16sp</dimen>
+    <dimen name="item_fav_place_description_textSize">14sp</dimen>
 
 </resources>

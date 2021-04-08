@@ -280,4 +280,6 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
 
 
 
+
+
 }

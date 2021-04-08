@@ -19,4 +19,7 @@
 
 <!--    #a8e6cf • #dcedc1 • #ffd3b6 • #ffaaa5 • #ff8b94-->
 
+    <color name="image_border_color">#757575</color>
+    <color name="item_happy_place_description_text_color">#606060</color>
+
 </resources>
