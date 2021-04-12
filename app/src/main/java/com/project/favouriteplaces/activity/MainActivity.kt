@@ -12,6 +12,7 @@ import com.project.favouriteplaces.R
 import com.project.favouriteplaces.adapters.FavPlacesAdapter
 import com.project.favouriteplaces.database.AppDatabase
 import com.project.favouriteplaces.database.FavPlace
+import com.project.favouriteplaces.fragments.FavPlaceDetail
 import kotlinx.android.synthetic.main.fragment_main2.*
 
 
@@ -61,6 +62,9 @@ class MainActivity : AppCompatActivity() {
             } else if (AddFavPlacesFragment.TAG == tag) {
                 fragment =
                     AddFavPlacesFragment()
+            }
+            else if(FavPlaceDetail.TAG == tag){
+                fragment = FavPlaceDetail()
             }
         }
 
