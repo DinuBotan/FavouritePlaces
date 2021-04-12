@@ -3,6 +3,7 @@ package com.project.favouriteplaces.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "place")
 data class FavPlace(
@@ -13,4 +14,4 @@ data class FavPlace(
     @ColumnInfo(name = "placeimage") var placeImage: String,
     @ColumnInfo(name = "placelatitude") var placeLatitude: Double,
     @ColumnInfo(name = "placelongitude") var placeLongitude: Double
-)
+) : Serializable

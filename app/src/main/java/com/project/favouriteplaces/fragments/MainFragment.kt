@@ -13,8 +13,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.activity.MainActivity
+import com.project.favouriteplaces.adapters.FavPlacesAdapter
+import com.project.favouriteplaces.database.AppDatabase
+import com.project.favouriteplaces.database.FavPlace
 import kotlinx.android.synthetic.main.fragment_main2.*
 import kotlinx.android.synthetic.main.fragment_main2.view.*
 
@@ -56,6 +60,24 @@ class MainFragment : Fragment() {
             }
         }
 
+        Thread{
+
+            var getFavPlaceList : ArrayList<FavPlace> = AppDatabase.getInstance(activity as MainActivity).placeDao().getPlaces().toCollection(ArrayList())
+
+
+            (activity as MainActivity).runOnUiThread {
+                if (getFavPlaceList.size > 0) {
+                    setupFavPlacesRecyclerView(getFavPlaceList)
+
+                    rv_fav_places_list.visibility = View.VISIBLE
+                    tv_no_records_available.visibility = View.GONE
+                } else {
+                    rv_fav_places_list.visibility = View.GONE
+                    tv_no_records_available.visibility = View.VISIBLE
+                }
+            }
+        }.start()
+
         return rootView
     }
     override fun onRequestPermissionsResult(
@@ -85,6 +107,26 @@ class MainFragment : Fragment() {
                 iv_image.setImageBitmap(thumBnail)
             }
         }
+
+
+    }
+
+    private fun setupFavPlacesRecyclerView(favPlaceList: ArrayList<FavPlace>){
+        rv_fav_places_list.layoutManager = LinearLayoutManager(activity as MainActivity)
+        rv_fav_places_list.setHasFixedSize(true)
+
+        val placesAdapter = FavPlacesAdapter(activity as MainActivity, favPlaceList)
+        rv_fav_places_list.adapter = placesAdapter
+
+        placesAdapter.setOnClickListener(object : FavPlacesAdapter.OnClickListener{
+            override fun onClick(position: Int, model: FavPlace) {
+                val intent = Intent((activity as MainActivity), FavPlaceDetail::class.java)
+                (activity as MainActivity).showFragmentByTag(FavPlaceDetail.TAG)
+            }
+
+        })
+
+
 
 
     }

@@ -1,8 +1,10 @@
 package com.project.favouriteplaces.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.favouriteplaces.fragments.AddFavPlacesFragment
 import com.project.favouriteplaces.fragments.MainFragment
@@ -30,23 +32,23 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
 
-        Thread{
-
-            var getFavPlaceList : ArrayList<FavPlace> = AppDatabase.getInstance(this).placeDao().getPlaces().toCollection(ArrayList())
-
-
-            runOnUiThread {
-                if (getFavPlaceList.size > 0) {
-                    setupFavPlacesRecyclerView(getFavPlaceList)
-
-                    rv_fav_places_list.visibility = View.VISIBLE
-                    tv_no_records_available.visibility = View.GONE
-                } else {
-                    rv_fav_places_list.visibility = View.GONE
-                    tv_no_records_available.visibility = View.VISIBLE
-                }
-            }
-        }.start()
+//        Thread{
+//
+//            var getFavPlaceList : ArrayList<FavPlace> = AppDatabase.getInstance(this).placeDao().getPlaces().toCollection(ArrayList())
+//
+//
+//            runOnUiThread {
+//                if (getFavPlaceList.size > 0) {
+//                    setupFavPlacesRecyclerView(getFavPlaceList)
+//
+//                    rv_fav_places_list.visibility = View.VISIBLE
+//                    tv_no_records_available.visibility = View.GONE
+//                } else {
+//                    rv_fav_places_list.visibility = View.GONE
+//                    tv_no_records_available.visibility = View.VISIBLE
+//                }
+//            }
+//        }.start()
 
 
     }
@@ -72,12 +74,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupFavPlacesRecyclerView(favPlaceList: ArrayList<FavPlace>){
-        rv_fav_places_list.layoutManager = LinearLayoutManager(this)
-        rv_fav_places_list.setHasFixedSize(true)
+//    private fun setupFavPlacesRecyclerView(favPlaceList: ArrayList<FavPlace>){
+//        rv_fav_places_list.layoutManager = LinearLayoutManager(this)
+//        rv_fav_places_list.setHasFixedSize(true)
+//
+//        val placesAdapter = FavPlacesAdapter(this, favPlaceList)
+//        rv_fav_places_list.adapter = placesAdapter
+//
+//        placesAdapter.setOnClickListener(object : FavPlacesAdapter.OnClickListener{
+//            override fun onClick(position: Int, model: FavPlace) {
+//                val intent = Intent(this@MainActivity, FavPlacesD)
+//            }
+//        })
+//    }
 
-        val placesAdapter = FavPlacesAdapter(this, favPlaceList)
-        rv_fav_places_list.adapter = placesAdapter
-    }
+
 
 }

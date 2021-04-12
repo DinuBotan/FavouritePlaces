@@ -16,6 +16,8 @@ open class FavPlacesAdapter(
         private var list: ArrayList<FavPlace>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var onClickListener: OnClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return MyViewHolder(
                 LayoutInflater.from(context).inflate(
@@ -26,6 +28,10 @@ open class FavPlacesAdapter(
         )
     }
 
+    fun setOnClickListener(onClickListener: OnClickListener){
+        this.onClickListener = onClickListener
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val model = list[position]
 
@@ -34,11 +40,22 @@ open class FavPlacesAdapter(
             holder.itemView.tvTitle.text = model.placeTitle
             holder.itemView.tvDescription.text = model.placeDescription
 
+            holder.itemView.setOnClickListener{
+                if(onClickListener != null){
+                    onClickListener!!.onClick(position, model)
+                }
+            }
+
         }
+
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    interface OnClickListener{
+        fun onClick(position: Int, model:FavPlace)
     }
 
     private class MyViewHolder(view: View) : RecyclerView.ViewHolder(view)

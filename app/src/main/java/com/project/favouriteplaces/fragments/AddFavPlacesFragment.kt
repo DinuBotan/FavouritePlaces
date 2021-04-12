@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -77,6 +78,7 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
         rootView.tv_add_image.setOnClickListener(this)
         rootView.btn_save.setOnClickListener(this)
         rootView.et_location.setOnClickListener(this)
+
 
 
         return rootView;
@@ -277,6 +279,7 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
         }
         return Uri.parse(file.absolutePath)
     }
+
 
 
 
