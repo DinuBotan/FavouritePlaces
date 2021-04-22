@@ -27,7 +27,7 @@ open class FavPlacesAdapter(
                 )
         )
     }
-
+    //Because an adapter cannot have a onClickListener
     fun setOnClickListener(onClickListener: OnClickListener){
         this.onClickListener = onClickListener
     }

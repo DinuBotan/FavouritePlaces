@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.favouriteplaces.fragments.AddFavPlacesFragment
@@ -74,6 +75,15 @@ class MainActivity : AppCompatActivity() {
 
             ft.addToBackStack(null) // add fragment transaction to the back stack
 
+            ft.commit()
+        }
+    }
+
+    public fun showFragmentByTag(fragment: Fragment){
+        if(fragment!= null){
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.initialScreen, fragment, "TAG_FRAGMENT_DETAILS")
+            ft.addToBackStack(null)
             ft.commit()
         }
     }
