@@ -47,7 +47,7 @@ class FavPlaceDetail : Fragment() {
         if(bundle != null){
             var receivedModel = bundle.getSerializable("placeInfo") as FavPlace
             Log.d("Deserilized", receivedModel.placeDescription)
-            iv_place_image.setImageURI(Uri.parse(receivedModel.placeImage))
+            //iv_place_image.setImageURI(Uri.parse(receivedModel.placeImage))
 //            tv_description?.text = receivedModel.placeDescription
 //            tv_description?.text = "receivedModel.placeDescription"
             tv_location?.text = receivedModel.placeLocation

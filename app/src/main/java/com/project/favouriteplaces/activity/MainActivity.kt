@@ -7,13 +7,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.project.favouriteplaces.fragments.AddFavPlacesFragment
-import com.project.favouriteplaces.fragments.MainFragment
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.adapters.FavPlacesAdapter
 import com.project.favouriteplaces.database.AppDatabase
 import com.project.favouriteplaces.database.FavPlace
-import com.project.favouriteplaces.fragments.FavPlaceDetail
+import com.project.favouriteplaces.fragments.*
 import kotlinx.android.synthetic.main.fragment_main2.*
 
 
@@ -26,10 +24,12 @@ class MainActivity : AppCompatActivity() {
         val addPlacesFragment =
             AddFavPlacesFragment()
         val mainFragment = MainFragment()
+        val signUpFragment = SignUpFragment()
+        val introFragment = IntroFragment()
 
 //        Set the initial fragment to our fragments container.
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.initialScreen, mainFragment)
+            replace(R.id.initialScreen, introFragment)
             addToBackStack(null)
             commit()
         }
@@ -66,6 +66,12 @@ class MainActivity : AppCompatActivity() {
             }
             else if(FavPlaceDetail.TAG == tag){
                 fragment = FavPlaceDetail()
+            }
+            else if(SignUpFragment.TAG == tag){
+                fragment = SignUpFragment()
+            }
+            else if(SignInFragment.TAG == tag){
+                fragment = SignInFragment()
             }
         }
 

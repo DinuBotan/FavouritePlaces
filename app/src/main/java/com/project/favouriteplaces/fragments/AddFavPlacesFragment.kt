@@ -81,7 +81,7 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
 
 
 
-        return rootView;
+        return rootView
     }
 
     private fun savePlace(favPlace: FavPlace){

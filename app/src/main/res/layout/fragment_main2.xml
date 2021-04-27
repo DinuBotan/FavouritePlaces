@@ -12,6 +12,7 @@
         android:id="@+id/rv_fav_places_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
         android:visibility="gone"
         tools:visibility="gone"
         />
