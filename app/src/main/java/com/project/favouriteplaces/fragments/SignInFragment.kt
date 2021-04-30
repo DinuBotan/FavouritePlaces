@@ -11,6 +11,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.activity.MainActivity
+import com.project.favouriteplaces.firebase.FirestoreClass
+import com.project.favouriteplaces.models.User
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import kotlinx.android.synthetic.main.fragment_sign_in.view.*
 import kotlinx.android.synthetic.main.fragment_sign_up.*
@@ -61,8 +63,9 @@ class SignInFragment : BaseFragment() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("Sing in", "createUserWithEmail:success")
-                        val user = auth.currentUser
-                        (activity as MainActivity).showFragmentByTag(MainFragment.TAG)
+//                        val user = auth.currentUser
+//                        (activity as MainActivity).showFragmentByTag(MainFragment.TAG)
+                        FirestoreClass().signInUser(this)
 
                     } else {
                         // If sign in fails, display a message to the user.
@@ -88,6 +91,11 @@ class SignInFragment : BaseFragment() {
             }
         }
 
+    }
+
+    fun signInSuccess(user: User){
+        hideProgressDialog()
+        (activity as MainActivity).showFragmentByTag(MainFragment.TAG)
     }
 
 }

@@ -2,15 +2,15 @@ package com.project.favouriteplaces.fragments
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.activity.MainActivity
-import kotlinx.android.synthetic.main.fragment_add_fav_places.view.*
-import kotlinx.android.synthetic.main.fragment_sign_in.*
+import com.project.favouriteplaces.firebase.FirestoreClass
+import com.project.favouriteplaces.models.User
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.fragment_sign_up.view.*
 
@@ -72,7 +72,12 @@ class SignUpFragment : BaseFragment() {
                     (activity as MainActivity).showFragmentByTag(SignInFragment.TAG)
                     val firebaseUser: FirebaseUser = task.result!!.user!!
                     val registeredEmail = firebaseUser.email!!
+                    Log.d("FirebaseD", "Will print toast now")
                     Toast.makeText((activity as MainActivity), "$name you have successfully registered the email address $registeredEmail", Toast.LENGTH_LONG).show()
+                    Log.d("FirebaseD", "Will get user now")
+                    val user = User(firebaseUser.uid, name, registeredEmail)
+                    Log.d("FirebaseD", "Will register user now")
+                    FirestoreClass().registerUser(this@SignUpFragment, user)
                     FirebaseAuth.getInstance().signOut()
                 }else{
                     Toast.makeText(activity as MainActivity,
@@ -102,6 +107,12 @@ class SignUpFragment : BaseFragment() {
             }
         }
 
+    }
+
+    fun userRegisteredSuccess(){
+        Toast.makeText((activity as MainActivity), "You have successfully registered", Toast.LENGTH_LONG).show()
+        hideProgressDialog()
+        FirebaseAuth.getInstance().signOut()
     }
 
 
