@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 
 android {
@@ -62,5 +63,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+
 
 }

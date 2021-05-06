@@ -142,6 +142,11 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
                     var newPlace = FavPlace(null, et_title.text.toString(), et_description.text.toString(), et_location.text.toString(),
                         saveImageToInternalStorage.toString(), pLatitude ,pLongitude)
                     savePlace(newPlace)
+                    onPause()
+                    onStop()
+                    onDestroy()
+                    (activity as MainActivity).showFragmentByTag(MainFragment.TAG)
+
                 }
                 }
             }
@@ -279,6 +284,8 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
         }
         return Uri.parse(file.absolutePath)
     }
+
+
 
 
 

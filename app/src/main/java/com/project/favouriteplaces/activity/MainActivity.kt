@@ -3,10 +3,12 @@ package com.project.favouriteplaces.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.SupportMapFragment
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.adapters.FavPlacesAdapter
 import com.project.favouriteplaces.database.AppDatabase
@@ -85,10 +87,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    public fun showFragmentByTag(fragment: Fragment){
+    public fun showFragment(fragment: Fragment){
         if(fragment!= null){
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.initialScreen, fragment, "TAG_FRAGMENT_DETAILS")
+            Log.d("Deserialized fragment", fragment.tag!!)
             ft.addToBackStack(null)
             ft.commit()
         }
@@ -107,7 +110,6 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        })
 //    }
-
 
 
 }

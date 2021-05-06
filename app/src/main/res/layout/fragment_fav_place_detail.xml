@@ -34,7 +34,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_place_image"
+                android:id="@+id/iv_place_image_detail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/detail_screen_image_height_size"
                 android:scaleType="centerCrop"
@@ -55,7 +55,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.533"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_place_image"
+                app:layout_constraintTop_toBottomOf="@+id/iv_place_image_detail"
                 tools:text="Description" />
 
             <TextView
@@ -93,16 +93,6 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_location" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/testTV"
-                app:layout_constraintTop_toBottomOf="@id/btn_view_on_map"
-                android:text="This is a test TV"
-                >
-
-            </TextView>
             <!--END-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
