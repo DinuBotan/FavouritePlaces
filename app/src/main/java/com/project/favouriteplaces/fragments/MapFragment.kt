@@ -36,16 +36,6 @@ class MapFragment : Fragment(), OnMapReadyCallback{
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
 
-//        //Code from youtube video
-//        val map = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-//        map.getMapAsync {
-//            googleMap -> mMap = googleMap
-//            mapReady = true
-//
-//        }
-
-
-
         var bundle = this.arguments
 
          if(bundle != null){

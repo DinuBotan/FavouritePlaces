@@ -1,13 +1,19 @@
 package com.project.favouriteplaces.fragments
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+
+import android.content.Context.LOCATION_SERVICE
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
@@ -16,7 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.FragmentManager
+import com.google.android.gms.location.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -24,11 +32,13 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.project.favouriteplaces.R
 import com.project.favouriteplaces.activity.MainActivity
 import com.project.favouriteplaces.database.AppDatabase
 import com.project.favouriteplaces.database.FavPlace
+import com.project.favouriteplaces.utils.GetAddressFromLatLng
 import kotlinx.android.synthetic.main.fragment_add_fav_places.*
 import kotlinx.android.synthetic.main.fragment_add_fav_places.view.*
 import java.io.File
@@ -37,12 +47,15 @@ import java.io.IOException
 import java.io.OutputStream
 import java.lang.Exception
 import java.util.*
+import java.util.jar.Manifest
 
 class AddFavPlacesFragment : Fragment(), View.OnClickListener {
 
     private var saveImageToInternalStorage : Uri? = null
     private var pLatitude : Double = 0.0
     private var pLongitude : Double = 0.0
+
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     companion object{
         const val TAG = "TAG_FRAGMENT_ADD_PLACES"
@@ -66,6 +79,8 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
             (activity as MainActivity).onBackPressed()
         }
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity as MainActivity)
+
         if(!Places.isInitialized()){
             Places.initialize(activity as MainActivity, resources.getString(R.string.google_maps_api_key))
         }
@@ -78,10 +93,59 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
         rootView.tv_add_image.setOnClickListener(this)
         rootView.btn_save.setOnClickListener(this)
         rootView.et_location.setOnClickListener(this)
+        rootView.tv_select_current_location.setOnClickListener(this)
 
 
 
         return rootView
+    }
+
+//    private fun isLocationEnabled(): Boolean{
+//        val locationManager: LocationManager =
+//                getSystemService(Context, LOCATION_SERVICE) as LocationManager
+//        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+//    }
+
+    private fun isLocationEnabled(mContext: Context): Boolean {
+    val lm = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER)
+}
+
+    //We supress the error because we will have checked for bermission by this time
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        var mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = 1000
+        //We only want to get the location once, not continuously
+        mLocationRequest.numUpdates = 1
+
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallBack, Looper.myLooper())
+    }
+
+    private val mLocationCallBack = object : LocationCallback(){
+        override fun onLocationResult(locationResult: LocationResult?) {
+            val mLastLocation: Location = locationResult!!.lastLocation
+            pLatitude = mLastLocation.latitude
+            Log.i("Current latitude", "$pLatitude")
+            pLongitude = mLastLocation.longitude
+            Log.i("Current longitude", "$pLongitude")
+
+            val addressTask = GetAddressFromLatLng(activity as MainActivity, pLatitude, pLongitude)
+            addressTask.setAddressListener(object: GetAddressFromLatLng.AddressListener{
+               override fun onAddressFound(address:String?){
+                   et_location.setText(address)
+
+               }
+
+                override fun onError(){
+                    Log.e("Get address::", "Something went wrong")
+                }
+            })
+            addressTask.getAddress()
+
+        }
     }
 
     private fun savePlace(favPlace: FavPlace){
@@ -161,6 +225,36 @@ class AddFavPlacesFragment : Fragment(), View.OnClickListener {
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE)
                 }catch(e:Exception){
                     e.printStackTrace()
+                }
+            }
+            R.id.tv_select_current_location -> {
+                if(!isLocationEnabled(activity as MainActivity)){
+                    Toast.makeText(
+                            activity as MainActivity,
+                            "Your location is turned off, Please turn it on",
+                            Toast.LENGTH_SHORT
+                    ).show()
+
+                }else{
+                    Dexter.withActivity(activity as MainActivity).withPermissions(
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ).withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            if (report!!.areAllPermissionsGranted()) {
+
+                                 requestNewLocationData()
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                                permissions: MutableList<PermissionRequest>?,
+                                token: PermissionToken?
+                        ) {
+                            showRationalDialogForPermissions()
+                        }
+                    }).onSameThread()
+                            .check()
                 }
             }
         }
