@@ -23,10 +23,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val addPlacesFragment =
-            AddFavPlacesFragment()
-        val mainFragment = MainFragment()
-        val signUpFragment = SignUpFragment()
         val introFragment = IntroFragment()
 
 //        Set the initial fragment to our fragments container.
@@ -36,23 +32,7 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
 
-//        Thread{
-//
-//            var getFavPlaceList : ArrayList<FavPlace> = AppDatabase.getInstance(this).placeDao().getPlaces().toCollection(ArrayList())
-//
-//
-//            runOnUiThread {
-//                if (getFavPlaceList.size > 0) {
-//                    setupFavPlacesRecyclerView(getFavPlaceList)
-//
-//                    rv_fav_places_list.visibility = View.VISIBLE
-//                    tv_no_records_available.visibility = View.GONE
-//                } else {
-//                    rv_fav_places_list.visibility = View.GONE
-//                    tv_no_records_available.visibility = View.VISIBLE
-//                }
-//            }
-//        }.start()
+
 
 
     }
